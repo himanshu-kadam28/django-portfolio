@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="ocean">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ profile.name|default:"Portfolio" }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}Personal portfolio of {{ profile.name }}{% endblock %}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Loading overlay -->
+    <div id="loader">
+        <div class="loader-ring"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container nav-wrap">
+            <a href="{% url 'portfolio:home' %}" class="brand">
+                <span class="brand-logo">{{ profile.name|first|default:"P" }}</span>
+                <span>{{ profile.name|default:"Portfolio" }}</span>
+            </a>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="{% url 'portfolio:home' %}#home">Home</a></li>
+                <li><a href="{% url 'portfolio:home' %}#about">About</a></li>
+                <li><a href="{% url 'portfolio:home' %}#skills">Skills</a></li>
+                <li><a href="{% url 'portfolio:projects' %}">Projects</a></li>
+                <li><a href="{% url 'portfolio:contact' %}">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="icon-btn" id="themePickerBtn" aria-label="Choose theme">
+                    <i class="fas fa-palette"></i>
+                </button>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <!-- Theme picker panel -->
+<div class="theme-picker" id="themePicker">
+    <div class="theme-picker-head">
+        <span><i class="fas fa-palette"></i> Choose Theme</span>
+        <button class="theme-picker-close" id="themePickerClose" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="theme-swatches">
+        <button class="swatch" data-theme-value="ocean" title="Ocean">
+            <span style="background: linear-gradient(135deg, #6ea8fe, #a78bfa);"></span>
+            <em>Ocean</em>
+        </button>
+        <button class="swatch" data-theme-value="emerald" title="Emerald">
+            <span style="background: linear-gradient(135deg, #34d399, #10b981);"></span>
+            <em>Emerald</em>
+        </button>
+        <button class="swatch" data-theme-value="sunset" title="Sunset">
+            <span style="background: linear-gradient(135deg, #f97316, #ec4899);"></span>
+            <em>Sunset</em>
+        </button>
+        <button class="swatch" data-theme-value="cyber" title="Cyber">
+            <span style="background: linear-gradient(135deg, #22d3ee, #d946ef);"></span>
+            <em>Cyber</em>
+        </button>
+        <button class="swatch" data-theme-value="royal" title="Royal">
+            <span style="background: linear-gradient(135deg, #a855f7, #fbbf24);"></span>
+            <em>Royal</em>
+        </button>
+        <button class="swatch" data-theme-value="crimson" title="Crimson">
+            <span style="background: linear-gradient(135deg, #ef4444, #f43f5e);"></span>
+            <em>Crimson</em>
+        </button>
+        <button class="swatch" data-theme-value="mono" title="Mono">
+            <span style="background: linear-gradient(135deg, #e5e5e5, #a3a3a3);"></span>
+            <em>Mono</em>
+        </button>
+        <button class="swatch" data-theme-value="light-blue" title="Light Blue">
+            <span style="background: linear-gradient(135deg, #2563eb, #7c3aed);"></span>
+            <em>Blue</em>
+        </button>
+        <button class="swatch" data-theme-value="light-rose" title="Light Rose">
+            <span style="background: linear-gradient(135deg, #e11d48, #db2777);"></span>
+            <em>Rose</em>
+        </button>
+        <button class="swatch" data-theme-value="light-mint" title="Light Mint">
+            <span style="background: linear-gradient(135deg, #059669, #0d9488);"></span>
+            <em>Mint</em>
+        </button>
+    </div>
+</div>
+    </header>
+
+    <!-- Flash messages -->
+    {% if messages %}
+    <div class="messages-container" id="messagesContainer">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            <i
+                class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+            <div>{{ message }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main>{% block content %}{% endblock %}</main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>{{ profile.name|default:"Portfolio" }}</h4>
+                    <p>{{ profile.headline|default:"Full Stack Developer" }}</p>
+                    <div class="footer-socials">
+                        {% if profile.github %}<a href="{{ profile.github }}" class="social-icon" target="_blank"><i
+                                class="fab fa-github"></i></a>{% endif %}
+                        {% if profile.linkedin %}<a href="{{ profile.linkedin }}" class="social-icon" target="_blank"><i
+                                class="fab fa-linkedin-in"></i></a>{% endif %}
+                        {% if profile.twitter %}<a href="{{ profile.twitter }}" class="social-icon" target="_blank"><i
+                                class="fab fa-twitter"></i></a>{% endif %}
+                        {% if profile.email %}<a href="mailto:{{ profile.email }}" class="social-icon"><i
+                                class="fas fa-envelope"></i></a>{% endif %}
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="{% url 'portfolio:home' %}#about">About</a>
+                    <a href="{% url 'portfolio:home' %}#skills">Skills</a>
+                    <a href="{% url 'portfolio:projects' %}">Projects</a>
+                    <a href="{% url 'portfolio:contact' %}">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Get in Touch</h4>
+                    {% if profile.email %}<p><i class="fas fa-envelope"></i> {{ profile.email }}</p>{% endif %}
+                    {% if profile.phone %}<p><i class="fas fa-phone"></i> {{ profile.phone }}</p>{% endif %}
+                    {% if profile.location %}<p><i class="fas fa-map-marker-alt"></i> {{ profile.location }}</p>{% endif %}
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; {% now "Y" %} {{ profile.name|default:"Portfolio" }}. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to top -->
+    <button id="scrollTop" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

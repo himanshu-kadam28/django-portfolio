@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} | {{ profile.name }}{% endblock %}
+
+{% block content %}
+<section style="padding-top:9rem;">
+    <div class="container" style="max-width:900px;">
+
+        <a href="{% url 'portfolio:projects' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to projects
+        </a>
+
+        <span class="section-tag">Project</span>
+        <h1 class="section-title" style="margin-bottom:.75rem;">{{ project.title }}</h1>
+        <p class="section-sub" style="margin-bottom:2rem;">{{ project.short_description }}</p>
+
+        {% if project.image %}
+            <img src="{{ project.image.url }}" alt="{{ project.title }}"
+                 style="width:100%; max-height:480px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:2rem; border:1px solid var(--border);">
+        {% endif %}
+
+        <div class="project-tags" style="margin-bottom:2rem;">
+            {% for tech in project.get_technologies_list %}
+                <span class="tag">{{ tech }}</span>
+            {% endfor %}
+        </div>
+
+        <div style="color:var(--text-muted); font-size:1.02rem; line-height:1.9;">
+            {{ project.description|linebreaks }}
+        </div>
+
+        <div style="margin-top:2.5rem; display:flex; gap:1rem; flex-wrap:wrap;">
+            {% if project.link %}
+                <a href="{{ project.link }}" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-external-link-alt"></i> Live Demo
+                </a>
+            {% endif %}
+            {% if project.github_link %}
+                <a href="{{ project.github_link }}" target="_blank" class="btn btn-outline">
+                    <i class="fab fa-github"></i> Source Code
+                </a>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}
